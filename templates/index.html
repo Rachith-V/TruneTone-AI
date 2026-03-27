@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TRUETONE AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0b0f1a;
+    --surface:   #111827;
+    --surface2:  #1a2236;
+    --border:    #1f2d45;
+    --border2:   #263550;
+    --text:      #e2e8f0;
+    --muted:     #64748b;
+    --accent:    #3b82f6;
+    --purple:    #8b5cf6;
+    --green:     #22c55e;
+    --red:       #ef4444;
+    --radius:    14px;
+    --radius-sm: 8px;
+    --transition: .2s ease;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 30px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    margin-bottom: 24px;
+    flex-shrink: 0;
+  }
+  .logo-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .logo-icon {
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-icon svg { width: 15px; height: 15px; fill: #fff; }
+  h1 {
+    font-size: clamp(22px, 3vw, 28px);
+    font-weight: 700;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
+  }
+  .tagline {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: .04em;
+    margin-top: 2px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    max-width: 460px;
+  }
+  .card-title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--muted);
+  }
+
+  /* ── DROP ZONE ── */
+  .drop-zone {
+    border: 1.5px dashed var(--border2);
+    border-radius: var(--radius-sm);
+    padding: 22px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: border-color var(--transition), background var(--transition);
+    background: transparent;
+  }
+  .drop-zone:hover, .drop-zone.drag-over {
+    border-color: var(--accent);
+    background: rgba(59,130,246,.05);
+  }
+  .drop-icon {
+    width: 36px; height: 36px;
+    border-radius: 9px;
+    background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .drop-icon svg { width: 18px; height: 18px; stroke: var(--accent); fill: none; stroke-width: 1.7; }
+  .drop-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .drop-sub {
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .file-name {
+    font-size: 11px;
+    color: var(--accent);
+    text-align: center;
+    min-height: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* ── BUTTONS ── */
+  .btn-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border2);
+    background: var(--surface2);
+    color: var(--text);
+    transition: background var(--transition), border-color var(--transition), transform .1s;
+    white-space: nowrap;
+  }
+  .btn:hover { background: #223050; border-color: var(--accent); }
+  .btn:active { transform: scale(.97); }
+  .btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
+  .btn-analyze {
+    grid-column: span 2;
+    background: linear-gradient(135deg, rgba(59,130,246,.2), rgba(139,92,246,.2));
+    border-color: rgba(99,160,255,.35);
+    color: #93c5fd;
+    font-weight: 600;
+    letter-spacing: .02em;
+  }
+  .btn-analyze:hover {
+    background: linear-gradient(135deg, rgba(59,130,246,.32), rgba(139,92,246,.32));
+    border-color: rgba(99,160,255,.6);
+    color: #bfdbfe;
+  }
+  .btn.recording { border-color: var(--red); color: #fca5a5; background: rgba(239,68,68,.1); }
+
+  /* ── WAVEFORM ── */
+  .waveform-section {
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+    flex-shrink: 0;
+  }
+  .waveform-label {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: 8px;
+  }
+  #waveCanvas {
+    width: 100%;
+    height: 44px;
+    display: block;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="logo-mark">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+    </div>
+    <h1>TRUETONE AI</h1>
+  </div>
+  <p class="tagline">Real-time voice authenticity detection</p>
+</header>
+
+<!-- ── INPUT CARD ── -->
+<div class="card">
+  <span class="card-title">Audio Input</span>
+
+  <!-- Drop Zone -->
+  <div class="drop-zone" id="dropZone">
+    <div class="drop-icon">
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    </div>
+    <p class="drop-label">Drag & drop audio file</p>
+    <p class="drop-sub">MP3, WAV, M4A, OGG, FLAC supported</p>
+  </div>
+  <p class="file-name" id="fileName">No file selected</p>
+
+  <input type="file" id="fileInput" accept="audio/*" style="display:none" />
+
+  <!-- Buttons -->
+  <div class="btn-row">
+    <button class="btn" id="btnUpload">
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Upload Audio
+    </button>
+    <button class="btn" id="btnRecord">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg>
+      Record Voice
+    </button>
+    <button class="btn btn-analyze" id="btnAnalyze">
+      <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Analyze Voice
+    </button>
+  </div>
+
+  <!-- Waveform -->
+  <div class="waveform-section">
+    <p class="waveform-label">Waveform</p>
+    <canvas id="waveCanvas"></canvas>
+  </div>
+</div>
+
+<script>
+(function () {
+  let selectedFile = null;
+  let mediaRecorder = null;
+  let recordingChunks = [];
+  let isRecording = false;
+  let audioContext = null;
+  let analyserNode = null;
+  let waveAnimId = null;
+
+  const fileInput  = document.getElementById('fileInput');
+  const dropZone   = document.getElementById('dropZone');
+  const fileNameEl = document.getElementById('fileName');
+  const btnUpload  = document.getElementById('btnUpload');
+  const btnRecord  = document.getElementById('btnRecord');
+  const btnAnalyze = document.getElementById('btnAnalyze');
+  const canvas     = document.getElementById('waveCanvas');
+  const ctx        = canvas.getContext('2d');
+
+  // ── FILE UPLOAD ──────────────────────────────────────────────────────
+  btnUpload.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files[0]) loadFile(fileInput.files[0]);
+  });
+
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault(); dropZone.classList.remove('drag-over');
+    const f = e.dataTransfer.files[0];
+    if (f && f.type.startsWith('audio/')) loadFile(f);
+  });
+  dropZone.addEventListener('click', () => fileInput.click());
+
+  function loadFile(file) {
+    selectedFile = file;
+    fileNameEl.textContent = file.name;
+    drawIdleWave();
+  }
+
+  // ── RECORD ──────────────────────────────────────────────────────────
+  btnRecord.addEventListener('click', async () => {
+    if (isRecording) {
+      mediaRecorder && mediaRecorder.stop();
+      return;
+    }
+    try {
+      console.log('Starting recording...');
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      console.log('✅ Microphone access granted');
+      
+      startLiveWave(stream);
+      
+      // Try different audio MIME types
+      let mimeType = 'audio/webm';
+      const types = [
+        'audio/wav',
+        'audio/webm',
+        'audio/ogg',
+        'audio/mp4'
+      ];
+      
+      for (const type of types) {
+        if (MediaRecorder.isTypeSupported(type)) {
+          mimeType = type;
+          console.log('Using MIME type:', mimeType);
+          break;
+        }
+      }
+      
+      mediaRecorder = new MediaRecorder(stream, { mimeType });
+      recordingChunks = [];
+      mediaRecorder.ondataavailable = e => recordingChunks.push(e.data);
+      mediaRecorder.onstop = () => {
+        console.log('Recording stopped. Chunks:', recordingChunks.length);
+        stream.getTracks().forEach(t => t.stop());
+        stopLiveWave();
+        
+        // Create blob with the recorded data
+        const blob = new Blob(recordingChunks, { type: mimeType });
+        console.log('Blob size:', blob.size, 'type:', mimeType);
+        
+        // Determine file extension based on MIME type
+        let ext = 'webm';
+        if (mimeType.includes('wav')) ext = 'wav';
+        else if (mimeType.includes('ogg')) ext = 'ogg';
+        else if (mimeType.includes('mp4')) ext = 'm4a';
+        
+        const file = new File([blob], `recording.${ext}`, { type: mimeType });
+        console.log('Created file:', file.name, file.type);
+        loadFile(file);
+        
+        isRecording = false;
+        btnRecord.classList.remove('recording');
+        btnRecord.innerHTML = `<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2"><circle cx="12" cy="12" r="6"/></svg> Record Voice`;
+      };
+      
+      mediaRecorder.start();
+      isRecording = true;
+      btnRecord.classList.add('recording');
+      btnRecord.innerHTML = `<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2"><rect x="6" y="6" width="12" height="12" rx="2"/></svg> Stop`;
+      console.log('Recording started');
+    } catch(err) {
+      console.error('Recording error:', err);
+      alert('Microphone error: ' + err.message);
+    }
+  });
+
+  // ── ANALYZE → Call real API ───────────────────────────────────
+  btnAnalyze.addEventListener('click', async () => {
+    if (!selectedFile) { alert('Please upload or record an audio file first.'); return; }
+    
+    console.log('Selected file:', selectedFile);
+    console.log('File name:', selectedFile.name);
+    console.log('File type:', selectedFile.type);
+    console.log('File size:', selectedFile.size);
+    
+    btnAnalyze.disabled = true;
+    btnAnalyze.textContent = 'Analyzing…';
+    
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    
+    try {
+      console.log('Sending request to /api/predict...');
+      const response = await fetch('/api/predict', {
+        method: 'POST',
+        body: formData
+      });
+      
+      console.log('Response status:', response.status);
+      const result = await response.json();
+      console.log('Response:', result);
+      
+      if (result.status === 'success') {
+        // Store result in localStorage and redirect
+        localStorage.setItem('predictionResult', JSON.stringify(result.result));
+        localStorage.setItem('audioFile', selectedFile.name);
+        console.log('✅ Redirecting to result.html');
+        setTimeout(() => {
+          window.location.href = '/result.html';
+        }, 500);
+      } else {
+        alert('Error: ' + result.error);
+        btnAnalyze.disabled = false;
+        btnAnalyze.textContent = 'Analyze Voice';
+      }
+    } catch(err) {
+      console.error('Error:', err);
+      alert('Network error: ' + err.message);
+      btnAnalyze.disabled = false;
+      btnAnalyze.textContent = 'Analyze Voice';
+    }
+  });
+
+  // ── WAVEFORM ─────────────────────────────────────────────────────────
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    canvas.width  = rect.width  * devicePixelRatio;
+    canvas.height = rect.height * devicePixelRatio;
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+  }
+  resizeCanvas();
+  window.addEventListener('resize', () => { resizeCanvas(); drawIdleWave(); });
+
+  function drawIdleWave() {
+    const w = canvas.getBoundingClientRect().width;
+    const h = canvas.getBoundingClientRect().height;
+    ctx.clearRect(0, 0, w, h);
+    ctx.beginPath();
+    ctx.strokeStyle = '#1f2d45';
+    ctx.lineWidth = 1.2;
+    ctx.moveTo(0, h / 2);
+    ctx.lineTo(w, h / 2);
+    ctx.stroke();
+  }
+
+  function startLiveWave(stream) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    analyserNode = audioContext.createAnalyser();
+    analyserNode.fftSize = 256;
+    const src = audioContext.createMediaStreamSource(stream);
+    src.connect(analyserNode);
+    const buf = new Uint8Array(analyserNode.frequencyBinCount);
+    const w = canvas.getBoundingClientRect().width;
+    const h = canvas.getBoundingClientRect().height;
+
+    function draw() {
+      waveAnimId = requestAnimationFrame(draw);
+      analyserNode.getByteTimeDomainData(buf);
+      ctx.clearRect(0, 0, w, h);
+      ctx.beginPath();
+      ctx.strokeStyle = '#3b82f6';
+      ctx.globalAlpha = 0.65;
+      ctx.lineWidth = 1.2;
+      const sliceW = w / buf.length;
+      let x = 0;
+      for (let i = 0; i < buf.length; i++) {
+        const v = buf[i] / 128.0;
+        const y = v * h / 2;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        x += sliceW;
+      }
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+    draw();
+  }
+
+  function stopLiveWave() {
+    cancelAnimationFrame(waveAnimId);
+    audioContext && audioContext.close();
+    drawIdleWave();
+  }
+
+  drawIdleWave();
+})();
+</script>
+</body>
+</html>

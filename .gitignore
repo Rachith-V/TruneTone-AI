@@ -1,0 +1,7 @@
+.venv/
+uploads/
+*.wav
+*.mp3
+*.pt
+*.pth
+__pycache__/
