@@ -102,24 +102,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-### Run test modules
 
-```
-python test_model_direct.py
-python test_diagnostic.py
-python test_startup_replica.py
-```
-
----
-
-## 🧪 Testing & Debugging
-
-* `debug_model.py` → Helps inspect model predictions
-* `test_model_direct.py` → Direct inference testing
-* `test_diagnostic.py` → Validates system reliability
-* `test_startup_replica.py` → Simulates real-world startup behavior
-
----
 
 ## 📊 Technologies Used
 
@@ -134,16 +117,14 @@ python test_startup_replica.py
 
 * Requires clean audio input for accurate results
 * Model performance depends on training data quality
-* Not intended for critical real-world decisions without validation
+
 
 ---
 
 ## 🔮 Future Enhancements
 
-* 🌐 Web Interface (Streamlit / Flask)
 * 📱 Mobile App Integration
 * 🧠 Deep Learning Model Improvements
-* 📡 Real-time Voice Streaming
 * ☁️ Cloud Deployment
 
 ---
@@ -162,7 +143,13 @@ This project is open-source and available under the MIT License.
 
 ## 👤 Author
 
-**Rachith Venkatesh**
+**Rachith V**
+B.Tech AI & Data Science
+**Shahul Hameed S**
+B.Tech AI & Data Science
+**Padma Kumar S**
+B.Tech AI & Data Science
+**Hemantth P**
 B.Tech AI & Data Science
 
 ---
