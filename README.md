@@ -144,13 +144,13 @@ This project is open-source and available under the MIT License.
 ## 👤 Author
 
 **Rachith V**
-B.Tech AI & Data Science
+*B.Tech AI & Data Science 
 **Shahul Hameed S**
-B.Tech AI & Data Science
+*B.Tech AI & Data Science
 **Padma Kumar S**
-B.Tech AI & Data Science
+*B.Tech AI & Data Science
 **Hemantth P**
-B.Tech AI & Data Science
+*B.Tech AI & Data Science
 
 ---
 
